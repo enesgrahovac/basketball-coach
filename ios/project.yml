@@ -1,0 +1,37 @@
+name: BasketballCoach
+options:
+  bundleIdPrefix: com.enes.basketballcoach
+configs:
+  Debug: debug
+  Release: release
+packages:
+  Supabase:
+    url: https://github.com/supabase-community/supabase-swift
+    from: 2.0.0
+targets:
+  BasketballCoach:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: BasketballCoach
+    info:
+      path: BasketballCoach/Info.plist
+      properties:
+        SUPABASE_URL: $(SUPABASE_URL)
+        SUPABASE_ANON_KEY: $(SUPABASE_ANON_KEY)
+        EDGE_ANALYZE_URL: $(EDGE_ANALYZE_URL)
+    settings:
+      base:
+        INFOPLIST_FILE: BasketballCoach/Info.plist
+        OTHER_SWIFT_FLAGS: "-DDEBUG"
+        SWIFT_VERSION: 5.0
+        PRODUCT_BUNDLE_IDENTIFIER: com.enes.basketballcoach.app
+    configFiles:
+      Debug: Config.xcconfig
+      Release: Config.xcconfig
+    dependencies:
+      - package: Supabase
+        product: Supabase
+    scheme:
+      testTargets: []

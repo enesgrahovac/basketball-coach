@@ -1,0 +1,60 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+Main Cursor Rule — AI Basketball Coaching iOS MVP (Bird’s-Eye)
+Purpose
+
+Build a minimal, native iOS app that helps players analyze individual basketball shots via short videos.
+
+Platform
+
+iOS, Swift (native).
+
+Keep implementation details flexible; do not assume libraries or services without approval.
+
+Product Scope (MVP)
+
+Record a 30-second video or upload from library.
+
+Classify each clip as {mid-range | lay-up | free-throw | 3-pointer} and {make | miss}.
+
+Provide an AI Coach summary with short, actionable tips for that clip.
+
+History screen to view previous clips with filters (shot type, make/miss, date).
+
+Offline-friendly: if AI is unavailable, queue analysis and show pending status.
+
+Non-Goals (MVP)
+
+No social/sharing, teams, or advanced analytics.
+
+No hardware sensors or complex multi-user features.
+
+Process & Guardrails
+
+Do not start writing code until I explicitly approve a design/proposal.
+
+First produce a concise Design Proposal for approval:
+
+Screens & navigation (Home, Record/Upload, Review/Analyze, History, Detail).
+
+Minimal data objects and what’s stored for each clip.
+
+High-level approach for classification + coaching (on-device vs. service), no deep tech details.
+
+Simple states: success, pending, failed.
+
+After approval, propose a short Build Plan; only then start implementation.
+
+If any assumption is required or a feature is unclear, ask before proceeding.
+
+Keep copy, labels, and UX minimal and consistent.
+
+Acceptance (High-Level)
+
+Users can record/upload a ≤30s clip, get a shot type + make/miss, see brief coach tips, and find clips in History using filters.
+
+Works gracefully when offline (queued/pending) and when analysis fails (clear status).
