@@ -55,6 +55,6 @@ Keep copy, labels, and UX minimal and consistent.
 
 Acceptance (High-Level)
 
-Users can record/upload a ≤30s clip, get a shot type + make/miss, see brief coach tips, and find clips in History using filters.
+Users can record/upload a ≤15s clip, get a shot type + make/miss, see brief coach tips, and find clips in History using filters.
 
 Works gracefully when offline (queued/pending) and when analysis fails (clear status).
