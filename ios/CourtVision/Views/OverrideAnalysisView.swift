@@ -29,7 +29,7 @@ struct OverrideAnalysisView: View {
                             .fontWeight(.bold)
                             .foregroundColor(.charcoal)
                         
-                        Text("Help improve ShotIQ by correcting any mistakes in the AI analysis")
+                        Text("Help improve CourtVision by correcting any mistakes in the AI analysis")
                             .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)

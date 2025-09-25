@@ -5,7 +5,7 @@ Flatten iOS AppIcon PNGs to remove alpha and ensure sRGB/8-bit.
 import os
 from PIL import Image, ImageCms
 
-ICON_DIR = "ShotIQ/Assets.xcassets/AppIcon.appiconset"
+ICON_DIR = "CourtVision/Assets.xcassets/AppIcon.appiconset"
 OUTPUT_BG = (255, 255, 255)  # white background
 
 

@@ -21,9 +21,11 @@
 	<key>EDGE_ANALYZE_URL</key>
 	<string>$(EDGE_ANALYZE_URL)</string>
 	<key>NSCameraUsageDescription</key>
-	<string>ShotIQ uses your camera to record practice shots for AI analysis.</string>
+	<string>CourtVision uses your camera to record practice shots for AI analysis.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>ShotIQ uses your microphone to capture audio during shot recording.</string>
+	<string>CourtVision uses your microphone to capture audio during shot recording.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CourtVision needs access to your photo library to upload basketball shot videos for AI analysis and coaching tips.</string>
 	<key>SUPABASE_ANON_KEY</key>
 	<string>$(SUPABASE_ANON_KEY)</string>
 	<key>SUPABASE_URL</key>
