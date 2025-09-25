@@ -75,7 +75,7 @@ Before opening the iOS project, you need to set up your API keys securely:
 
 To run it from CLI:
 xcodegen generate
-open BasketballCoach.xcodeproj
+open ShotIQ.xcodeproj
 
 ## Modal Endpoint Contract
 - URL: `<modal-url>/analyze` (called by the Edge Function)

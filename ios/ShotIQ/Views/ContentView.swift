@@ -7,19 +7,19 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             HomeView(selectedTab: $selectedTab)
                 .tabItem {
-                    Image(systemName: "video.circle")
-                    Text("Record")
+                    Image(systemName: "video.circle.fill")
+                    Text("Court")
                 }
                 .tag(0)
             
             HistoryView()
                 .tabItem {
                     Image(systemName: "clock.arrow.circlepath")
-                    Text("History")
+                    Text("Game Film")
                 }
                 .tag(1)
         }
-        .accentColor(.blue)
+        .accentColor(.basketballOrange)
     }
 }
 

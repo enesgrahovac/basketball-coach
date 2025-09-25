@@ -1,0 +1,319 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Basketball Coach App - Design & Style Guide
+
+## 🏀 Brand Identity
+
+### App Name
+**ShotIQ** - Conveys intelligence, analysis, and basketball focus
+
+### Brand Personality
+- **Professional yet approachable** - Serious about improvement, fun to use
+- **Basketball-authentic** - Respects the sport's culture and aesthetics
+- **Tech-forward** - Modern AI-powered analysis with clean UX
+- **Motivational** - Encourages practice and skill development
+
+---
+
+## 🎨 Visual Design System
+
+### Color Palette
+
+#### Primary Colors
+```
+Basketball Orange: #FF6B35 (Primary brand color)
+Deep Navy: #1B365D (Secondary, professional contrast)
+Pure White: #FFFFFF (Clean backgrounds)
+Charcoal: #2C2C2E (Text, dark elements)
+```
+
+#### Semantic Colors
+```
+Success/Make: #30D158 (iOS system green)
+Miss/Error: #FF3B30 (iOS system red) 
+Warning/Pending: #FF9500 (iOS system orange)
+Info/Analysis: #007AFF (iOS system blue)
+```
+
+#### Background & Surface Colors
+```
+Primary Background: #FFFFFF
+Secondary Background: #F2F2F7 (iOS system gray 6)
+Card Background: #FFFFFF with subtle shadow
+Overlay Background: rgba(0,0,0,0.4)
+```
+
+### Typography
+
+#### Font Hierarchy
+```
+Display (App Title): SF Pro Display, Bold, 28pt
+Headline: SF Pro Display, Semibold, 22pt
+Title: SF Pro Text, Semibold, 18pt
+Body: SF Pro Text, Regular, 16pt
+Caption: SF Pro Text, Regular, 12pt
+```
+
+#### Basketball-Specific Typography
+- Use **bold weights** for shot results (Make/Miss)
+- Use **medium weight** for shot types and stats
+- Use **regular weight** for tips and descriptions
+
+### Spacing & Layout
+
+#### Spacing Scale
+```
+xs: 4pt
+sm: 8pt  
+md: 16pt
+lg: 24pt
+xl: 32pt
+xxl: 48pt
+```
+
+#### Layout Principles
+- **16pt base padding** for screen edges
+- **24pt spacing** between major sections
+- **12pt spacing** between related elements
+- **8pt spacing** for tight groupings
+
+### Corner Radius & Shadows
+
+#### Border Radius
+```
+Small elements (chips, tags): 6pt
+Medium elements (buttons): 12pt
+Large elements (cards): 16pt
+Full rounded (profile pics): 50%
+```
+
+#### Shadow System
+```
+Card Shadow: 
+  - color: rgba(0,0,0,0.08)
+  - offset: (0, 2)
+  - blur: 8pt
+
+Button Shadow:
+  - color: rgba(255,107,53,0.3) // Basketball orange with opacity
+  - offset: (0, 4)
+  - blur: 12pt
+```
+
+---
+
+## 🎯 Component Design Patterns
+
+### Buttons
+
+#### Primary Action Button
+```
+Background: Basketball Orange (#FF6B35)
+Text: White, Semibold
+Padding: 16pt vertical, 24pt horizontal
+Corner Radius: 12pt
+Shadow: Button shadow system
+Icon: Leading icon with 8pt spacing
+```
+
+#### Secondary Action Button
+```
+Background: White
+Border: 2pt Basketball Orange
+Text: Basketball Orange, Semibold  
+Padding: 14pt vertical, 22pt horizontal
+Corner Radius: 12pt
+```
+
+#### Destructive Button
+```
+Background: System Red (#FF3B30)
+Text: White, Semibold
+Same sizing as primary
+```
+
+### Cards & Containers
+
+#### Video Clip Card
+```
+Background: White
+Corner Radius: 16pt
+Shadow: Card shadow system
+Padding: 16pt
+Content: 
+  - Thumbnail (80x60pt, 8pt radius)
+  - Play button overlay (white with 50% black background)
+  - Metadata with status chips
+```
+
+#### Status Chips
+```
+Make: Green background (opacity 0.1), green text
+Miss: Red background (opacity 0.1), red text  
+Pending: Orange background (opacity 0.1), orange text
+Shot Type: Blue background (opacity 0.1), blue text
+
+Padding: 6pt horizontal, 4pt vertical
+Corner Radius: 6pt
+Font: Caption, Medium
+```
+
+### Navigation & Tabs
+
+#### Tab Bar
+```
+Background: White with subtle shadow
+Selected: Basketball Orange
+Unselected: System Gray
+Icons: Basketball-themed where appropriate
+  - Record: video.circle / camera.circle
+  - History: clock.arrow.circlepath / list.bullet
+```
+
+#### Navigation Bar
+```
+Background: White
+Title: Headline typography
+Buttons: Basketball Orange tint
+Back button: System default with orange tint
+```
+
+---
+
+## 🏀 Basketball-Themed Elements
+
+### Icons & Imagery
+- **Basketball texture overlays** on important cards (subtle)
+- **Court line elements** as dividers or borders
+- **Hoop silhouettes** for empty states
+- **Basketball bounce animation** for loading states
+- **Net swish animation** for successful actions
+
+### Basketball Terminology in UI
+- "Shots" instead of "Videos"
+- "Court" for main area/home
+- "Playbook" for tips/analysis
+- "Practice Session" for recording session
+- "Game Film" for history/review
+
+### Shot Type Visual Indicators
+```
+3-Pointer: Arc icon with "3" 
+Mid-Range: Target/bullseye icon
+Layup: Basket with upward arrow
+Free Throw: Straight line to basket
+```
+
+---
+
+## 📱 Screen-Specific Guidelines
+
+### Home Screen
+- **Hero section** with app branding and basketball orange accent
+- **Large action buttons** with basketball-themed icons
+- **Status messages** in cards with appropriate semantic colors
+- **Basketball court background pattern** (very subtle, low opacity)
+
+### History Screen  
+- **List-based layout** with video clip cards
+- **Filter chips** at top with basketball orange selection
+- **Empty state** with basketball and motivational copy
+- **Pull-to-refresh** with basketball bounce animation
+
+### Video Player Screen
+- **Full-screen video** with custom controls
+- **Analysis overlay** with semi-transparent background
+- **Tip cards** with basketball orange accents
+- **Action buttons** following primary/secondary patterns
+
+### Loading & Error States
+- **Basketball bounce animation** for loading
+- **Court/hoop imagery** for empty states  
+- **Encouraging copy** that uses basketball terminology
+- **Clear action buttons** to retry or navigate
+
+---
+
+## ⚡ Animation & Interaction
+
+### Micro-Interactions
+- **Button press**: Slight scale down (0.95) with haptic feedback
+- **Card tap**: Gentle scale and shadow increase
+- **Status change**: Color transition with subtle bounce
+- **Upload progress**: Basketball bounce or rotating ball
+
+### Transitions
+- **Screen transitions**: Slide with slight bounce
+- **Sheet presentation**: Standard iOS with basketball orange handle
+- **Loading states**: Fade in/out with basketball-themed spinners
+
+### Haptic Feedback
+- **Success actions**: Success haptic (analysis complete)
+- **Button presses**: Light impact
+- **Errors**: Error haptic with visual feedback
+
+---
+
+## 🎨 Implementation Guidelines
+
+### SwiftUI Specific
+
+#### Color Extensions
+```swift
+extension Color {
+    static let basketballOrange = Color(hex: "#FF6B35")
+    static let deepNavy = Color(hex: "#1B365D")
+    static let courtBackground = Color(.systemGray6)
+}
+```
+
+#### Custom Modifiers
+```swift
+.basketballCard() // Applies card styling
+.primaryButton() // Basketball orange button style  
+.statusChip(type: .make/.miss/.pending) // Status styling
+.basketballShadow() // Consistent shadow system
+```
+
+### Accessibility
+- **High contrast** mode support with darker basketball orange
+- **Dynamic type** support for all text elements
+- **VoiceOver** labels using basketball terminology
+- **Reduced motion** alternatives for animations
+
+---
+
+## 📋 Design Checklist
+
+When implementing any UI element, ensure:
+
+- [ ] Uses basketball orange (#FF6B35) as primary accent
+- [ ] Follows 16pt base spacing system
+- [ ] Uses appropriate semantic colors for status
+- [ ] Includes proper corner radius (6/12/16pt)
+- [ ] Has consistent shadow if elevated
+- [ ] Uses basketball terminology in copy
+- [ ] Supports dark mode (with adjusted basketball orange)
+- [ ] Includes appropriate haptic feedback
+- [ ] Follows accessibility guidelines
+- [ ] Uses SF Pro font family
+
+---
+
+## 🔄 Evolution Guidelines
+
+This design system should:
+- **Stay basketball-authentic** while being modern
+- **Prioritize usability** over visual complexity  
+- **Scale consistently** as features are added
+- **Maintain brand recognition** through basketball orange
+- **Support platform conventions** (iOS Human Interface Guidelines)
+
+---
+
+*Last Updated: September 2024*
+*Version: 1.0*

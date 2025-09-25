@@ -1,6 +1,6 @@
-name: BasketballCoach
+name: ShotIQ
 options:
-  bundleIdPrefix: com.enes.basketballcoach
+  bundleIdPrefix: com.enes.shotiq
 configs:
   Debug: debug
   Release: release
@@ -9,24 +9,35 @@ packages:
     url: https://github.com/supabase-community/supabase-swift
     from: 2.0.0
 targets:
-  BasketballCoach:
+  ShotIQ:
     type: application
     platform: iOS
-    deploymentTarget: "16.0"
+    deploymentTarget: "17.0"
     sources:
-      - path: BasketballCoach
+      - path: ShotIQ
+        includes:
+          - "**/*.swift"
+        excludes:
+          - "Assets.xcassets/**"
+      - path: ShotIQ/Assets.xcassets
+        type: folder
+        buildPhase: resources
     info:
-      path: BasketballCoach/Info.plist
+      path: ShotIQ/Info.plist
       properties:
         SUPABASE_URL: $(SUPABASE_URL)
         SUPABASE_ANON_KEY: $(SUPABASE_ANON_KEY)
         EDGE_ANALYZE_URL: $(EDGE_ANALYZE_URL)
+        NSCameraUsageDescription: ShotIQ uses your camera to record practice shots for AI analysis.
+        NSMicrophoneUsageDescription: ShotIQ uses your microphone to capture audio during shot recording.
     settings:
       base:
-        INFOPLIST_FILE: BasketballCoach/Info.plist
+        INFOPLIST_FILE: ShotIQ/Info.plist
         OTHER_SWIFT_FLAGS: "-DDEBUG"
         SWIFT_VERSION: 5.0
-        PRODUCT_BUNDLE_IDENTIFIER: com.enes.basketballcoach.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.enes.shotiq.app
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
     configFiles:
       Debug: Config.xcconfig
       Release: Config.xcconfig

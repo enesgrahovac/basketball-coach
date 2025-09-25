@@ -20,6 +20,10 @@
 	<string>1</string>
 	<key>EDGE_ANALYZE_URL</key>
 	<string>$(EDGE_ANALYZE_URL)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ShotIQ uses your camera to record practice shots for AI analysis.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>ShotIQ uses your microphone to capture audio during shot recording.</string>
 	<key>SUPABASE_ANON_KEY</key>
 	<string>$(SUPABASE_ANON_KEY)</string>
 	<key>SUPABASE_URL</key>

@@ -13,59 +13,67 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                VStack(spacing: 8) {
-                    Text("Basketball Coach")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+            VStack(spacing: 32) {
+                // Hero Section
+                VStack(spacing: 16) {
+                    Text("ShotIQ")
+                        .font(.system(size: 28, weight: .bold, design: .default))
+                        .foregroundColor(.basketballOrange)
                     
-                    Text("Record or upload a basketball shot for AI analysis")
-                        .font(.subheadline)
+                    Text("AI-Powered Basketball Analysis")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.charcoal)
+                    
+                    Text("Record or upload your shots for instant AI coaching tips")
+                        .font(.body)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
                 }
+                .basketballCard()
+                .basketballPadding()
                 
+                // Action Buttons
                 VStack(spacing: 16) {
                     Button(action: { showCamera = true }) {
-                        HStack {
+                        HStack(spacing: 12) {
                             Image(systemName: "video.circle.fill")
                                 .font(.title2)
-                            Text("Record Video")
-                                .font(.headline)
+                            Text("Record Shot")
                         }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(12)
                     }
+                    .primaryButton()
                     .disabled(isBusy)
                     
                     Button(action: { showPicker = true }) {
-                        HStack {
+                        HStack(spacing: 12) {
                             Image(systemName: "photo.on.rectangle")
                                 .font(.title2)
                             Text("Upload from Library")
-                                .font(.headline)
                         }
-                        .foregroundColor(.blue)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(12)
                     }
+                    .secondaryButton()
                     .disabled(isBusy)
                 }
 
                 if isBusy {
-                    VStack(spacing: 8) {
+                    VStack(spacing: 12) {
                         ProgressView()
+                            .scaleEffect(1.2)
+                            .tint(.basketballOrange)
+                        
                         Text(statusText)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .font(.body)
+                            .fontWeight(.medium)
+                            .foregroundColor(.basketballOrange)
                             .multilineTextAlignment(.center)
                     }
+                    .basketballCard()
+                    .basketballPadding()
                 }
+                
+                Spacer()
             }
             .sheet(isPresented: $showPicker) {
                 VideoPicker { url in
@@ -78,8 +86,9 @@ struct HomeView: View {
                     Task { await handleVideoSelected(url: url) }
                 }
             }
-            .padding()
-            .navigationTitle("Record")
+            .basketballPadding()
+            .background(Color.courtBackground.ignoresSafeArea())
+            .navigationTitle("Court")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

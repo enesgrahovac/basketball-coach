@@ -26,11 +26,13 @@ struct HistoryView: View {
         var filtered = clips
         
         if let shotType = selectedShotType {
-            filtered = filtered.filter { $0.shot_type == shotType.rawValue }
+            // Filter by effective shot type (considering overrides)
+            filtered = filtered.filter { $0.effectiveShotType == shotType.rawValue }
         }
         
         if let result = selectedResult {
-            filtered = filtered.filter { $0.result == result.rawValue }
+            // Filter by effective result (considering overrides)
+            filtered = filtered.filter { $0.effectiveResult == result.rawValue }
         }
         
         return filtered
@@ -65,18 +67,24 @@ struct HistoryView: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if filteredClips.isEmpty {
-                    VStack(spacing: 16) {
-                        Image(systemName: "video.slash")
-                            .font(.largeTitle)
-                            .foregroundColor(.secondary)
-                        Text(clips.isEmpty ? "No clips yet" : "No clips match your filters")
-                            .font(.headline)
-                        Text(clips.isEmpty ? "Upload your first basketball video to get started!" : "Try adjusting your filters to see more clips.")
+                    VStack(spacing: 20) {
+                        Image(systemName: "basketball")
+                            .font(.system(size: 48))
+                            .foregroundColor(.basketballOrange)
+                        
+                        Text(clips.isEmpty ? "No shots yet" : "No shots match your filters")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.charcoal)
+                        
+                        Text(clips.isEmpty ? "Head to the Court to record your first basketball shot!" : "Try adjusting your filters to see more shots.")
                             .font(.body)
                             .multilineTextAlignment(.center)
                             .foregroundColor(.secondary)
+                            .padding(.horizontal, 24)
                     }
-                    .padding()
+                    .basketballCard()
+                    .basketballPadding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     List(filteredClips) { clip in
@@ -89,17 +97,22 @@ struct HistoryView: View {
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("History")
-            .navigationBarItems(
-                trailing: HStack {
-                    Button(action: { showingFilters.toggle() }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                    }
-                    Button(action: { Task { await loadClips() } }) {
-                        Image(systemName: "arrow.clockwise")
+            .background(Color.courtBackground.ignoresSafeArea())
+            .navigationTitle("Game Film")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack(spacing: 16) {
+                        Button(action: { showingFilters.toggle() }) {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                                .foregroundColor(.basketballOrange)
+                        }
+                        Button(action: { Task { await loadClips() } }) {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundColor(.basketballOrange)
+                        }
                     }
                 }
-            )
+            }
             .sheet(isPresented: $showingFilters) {
                 FilterView(
                     selectedShotType: $selectedShotType,
@@ -165,7 +178,7 @@ struct HistoryView: View {
         errorMessage = nil
         
         do {
-            clips = try await db.fetchClipsWithAnalysis()
+            clips = try await db.fetchClipsWithAnalysisAndOverrides() // Use override-aware fetching
             print("Successfully loaded \(clips.count) clips")
         } catch {
             print("Error loading clips: \(error)")
@@ -253,10 +266,14 @@ struct ClipRowView: View {
     let onPlay: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Thumbnail placeholder
+        HStack(spacing: 16) {
+            // Enhanced thumbnail with basketball theme
             Rectangle()
-                .fill(Color.gray.opacity(0.3))
+                .fill(LinearGradient(
+                    gradient: Gradient(colors: [Color.basketballOrange.opacity(0.1), Color.basketballOrange.opacity(0.05)]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ))
                 .frame(width: 80, height: 60)
                 .cornerRadius(8)
                 .overlay(
@@ -267,65 +284,55 @@ struct ClipRowView: View {
                         Image(systemName: "play.circle.fill")
                             .font(.title2)
                             .foregroundColor(.white)
-                            .background(Color.black.opacity(0.5))
-                            .clipShape(Circle())
+                            .background(Circle().fill(Color.basketballOrange.opacity(0.8)))
                     }
                 )
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text(formatDate(clip.created_at))
                         .font(.subheadline)
-                        .fontWeight(.medium)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.charcoal)
                     Spacer()
                     Text("\(clip.duration_s)s")
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .fontWeight(.medium)
+                        .foregroundColor(.basketballOrange)
                 }
                 
                 HStack(spacing: 8) {
                     if clip.isComplete {
                         Text(clip.displayShotType)
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(Color.blue.opacity(0.1))
-                            .foregroundColor(.blue)
-                            .cornerRadius(4)
+                            .statusChip(type: .shotType)
                         
                         Text(clip.displayResult)
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(clip.result == "make" ? Color.green.opacity(0.1) : Color.red.opacity(0.1))
-                            .foregroundColor(clip.result == "make" ? .green : .red)
-                            .cornerRadius(4)
+                            .statusChip(type: clip.effectiveResult == "make" ? .make : .miss)
+                        
+                        // User correction indicator
+                        if clip.hasUserCorrections {
+                            Image(systemName: "person.crop.circle.badge.checkmark")
+                                .foregroundColor(.basketballOrange)
+                                .font(.caption)
+                        }
                         
                         if let confidence = clip.confidence {
                             Text("\(Int(confidence * 100))%")
                                 .font(.caption)
+                                .fontWeight(.medium)
                                 .foregroundColor(.secondary)
                         }
                     } else if clip.isPending {
                         HStack(spacing: 4) {
                             ProgressView()
                                 .scaleEffect(0.7)
+                                .tint(.basketballOrange)
                             Text("Analyzing...")
-                                .font(.caption)
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 2)
-                        .background(Color.orange.opacity(0.1))
-                        .foregroundColor(.orange)
-                        .cornerRadius(4)
+                        .statusChip(type: .pending)
                     } else if clip.hasFailed {
-                        Text("Failed")
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(Color.red.opacity(0.1))
-                            .foregroundColor(.red)
-                            .cornerRadius(4)
+                        Text("Analysis Failed")
+                            .statusChip(type: .miss)
                     }
                     
                     Spacer()
@@ -336,14 +343,12 @@ struct ClipRowView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(2)
+                        .padding(.top, 2)
                 }
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 16)
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        .padding(16)
+        .basketballCard()
         .onTapGesture {
             print("Row tapped for clip: \(clip.id)")
             onPlay()
@@ -374,6 +379,7 @@ struct FilterView: View {
                         }
                     }
                     .pickerStyle(.wheel)
+                    .tint(.basketballOrange)
                 }
                 
                 Section("Result") {
@@ -384,6 +390,7 @@ struct FilterView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .tint(.basketballOrange)
                 }
                 
                 Section {
@@ -391,16 +398,21 @@ struct FilterView: View {
                         selectedShotType = nil
                         selectedResult = nil
                     }
-                    .foregroundColor(.red)
+                    .foregroundColor(.shotMiss)
+                    .fontWeight(.medium)
                 }
             }
-            .navigationTitle("Filters")
+            .navigationTitle("Filter Shots")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: Button("Done") {
-                    dismiss()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .foregroundColor(.basketballOrange)
+                    .fontWeight(.semibold)
                 }
-            )
+            }
         }
     }
 }

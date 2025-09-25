@@ -82,13 +82,94 @@ final class DatabaseService {
         var filteredClips = allClips
         
         if let shotType = shotType {
-            filteredClips = filteredClips.filter { $0.shot_type == shotType }
+            // Filter by effective shot type (considering overrides)
+            filteredClips = filteredClips.filter { $0.effectiveShotType == shotType }
         }
         
         if let result = result {
-            filteredClips = filteredClips.filter { $0.result == result }
+            // Filter by effective result (considering overrides)
+            filteredClips = filteredClips.filter { $0.effectiveResult == result }
         }
         
         return Array(filteredClips.prefix(limit))
+    }
+    
+    // MARK: - Override Methods
+    
+    func updateAnalysisOverride(analysisId: String, fieldName: String, overrideValue: String, originalValue: String?) async throws {
+        print("🔧 DatabaseService: updateAnalysisOverride called")
+        print("🔧 Analysis ID: \(analysisId)")
+        print("🔧 Field: \(fieldName)")
+        print("🔧 Override Value: \(overrideValue)")
+        print("🔧 Original Value: \(originalValue ?? "nil")")
+        
+        struct OverrideRequest: Encodable {
+            let analysis_id: String
+            let field_name: String
+            let override_value: String
+            let original_value: String?
+        }
+        
+        let request = OverrideRequest(
+            analysis_id: analysisId,
+            field_name: fieldName,
+            override_value: overrideValue,
+            original_value: originalValue
+        )
+        
+        print("🔧 Calling Supabase function 'update-analysis-overrides'...")
+        
+        // Call our custom edge function for handling overrides
+        do {
+            try await client.functions
+                .invoke("update-analysis-overrides", options: FunctionInvokeOptions(
+                    headers: ["Content-Type": "application/json"],
+                    body: JSONEncoder().encode(request)
+                ))
+            
+            print("🔧 Supabase function call completed successfully")
+            
+        } catch {
+            print("❌ Supabase function call failed: \(error)")
+            print("❌ Error type: \(type(of: error))")
+            throw error
+        }
+    }
+    
+    func fetchAnalysisOverrides(analysisIds: [String]) async throws -> [AnalysisOverride] {
+        guard !analysisIds.isEmpty else { return [] }
+        
+        let overrides: [AnalysisOverride] = try await client.database
+            .from("analysis_overrides")
+            .select()
+            .in("analysis_id", values: analysisIds)
+            .execute()
+            .value
+        
+        return overrides
+    }
+    
+    func fetchClipsWithAnalysisAndOverrides() async throws -> [ClipWithAnalysis] {
+        // First get clips with analysis
+        var clipsWithAnalysis = try await fetchClipsWithAnalysis()
+        
+        // Get all analysis IDs that have completed successfully
+        let analysisIds = clipsWithAnalysis.compactMap { clip in
+            clip.isComplete ? clip.analysis_id : nil
+        }
+        
+        // Fetch overrides for these analyses
+        let overrides = try await fetchAnalysisOverrides(analysisIds: analysisIds)
+        
+        // Group overrides by analysis_id for efficient lookup
+        let overridesByAnalysisId = Dictionary(grouping: overrides, by: { $0.analysis_id })
+        
+        // Attach overrides to clips
+        for i in 0..<clipsWithAnalysis.count {
+            let analysisId = clipsWithAnalysis[i].analysis_id
+            clipsWithAnalysis[i].overrides = overridesByAnalysisId[analysisId ?? ""] ?? []
+        }
+        
+        return clipsWithAnalysis
     }
 }

@@ -21,6 +21,15 @@ struct Analysis: Identifiable, Codable {
     let completed_at: Date?
 }
 
+struct AnalysisOverride: Identifiable, Codable {
+    let id: String
+    let analysis_id: String
+    let field_name: String
+    let original_value: String?
+    let override_value: String
+    let created_at: Date
+}
+
 struct ClipWithAnalysis: Identifiable, Codable {
     let id: String
     let storage_key: String
@@ -37,8 +46,29 @@ struct ClipWithAnalysis: Identifiable, Codable {
     let started_at: Date?
     let completed_at: Date?
     
+    // Overrides are populated separately via joins or additional queries
+    var overrides: [AnalysisOverride]?
+    
+    // MARK: - Effective Values (with override support)
+    
+    var effectiveShotType: String? {
+        // Return override value if present, otherwise original AI prediction
+        return overrides?.first(where: { $0.field_name == "shot_type" })?.override_value ?? shot_type
+    }
+    
+    var effectiveResult: String? {
+        // Return override value if present, otherwise original AI prediction  
+        return overrides?.first(where: { $0.field_name == "result" })?.override_value ?? result
+    }
+    
+    var hasUserCorrections: Bool {
+        return !(overrides?.isEmpty ?? true)
+    }
+    
+    // MARK: - Display Properties
+    
     var displayShotType: String {
-        guard let shotType = shot_type else { return "Unknown" }
+        guard let shotType = effectiveShotType else { return "Unknown" }
         switch shotType {
         case "lay_up": return "Lay-up"
         case "in_paint": return "In Paint"
@@ -50,9 +80,11 @@ struct ClipWithAnalysis: Identifiable, Codable {
     }
     
     var displayResult: String {
-        guard let result = result else { return "Pending" }
+        guard let result = effectiveResult else { return "Pending" }
         return result.capitalized
     }
+    
+    // MARK: - Status Properties
     
     var isComplete: Bool {
         return analysis_status == "success"
@@ -95,6 +127,27 @@ enum ShotResult: String, CaseIterable {
     
     var displayName: String {
         return rawValue.capitalized
+    }
+}
+
+enum OverrideField: String, CaseIterable {
+    case shotType = "shot_type"
+    case result = "result"
+    
+    var displayName: String {
+        switch self {
+        case .shotType: return "Shot Type"
+        case .result: return "Make/Miss"
+        }
+    }
+    
+    var validValues: [String] {
+        switch self {
+        case .shotType:
+            return ShotType.allCases.map { $0.rawValue }
+        case .result:
+            return ShotResult.allCases.map { $0.rawValue }
+        }
     }
 }
 
