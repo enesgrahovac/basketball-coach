@@ -1,0 +1,102 @@
+# Different prompt variations for testing
+
+prompts:
+  current_production:
+    name: "Current Production Prompt"
+    description: "The prompt currently used in production"
+    content: |
+      You are analyzing a single basketball shot attempt from a short video clip.
+
+      Return ONLY a single JSON object per the schema below—no extra text.
+
+      TASKS
+      1) Decide if the shot is a MAKE or MISS.
+      2) Decide the range category: LAY_UP, IN_PAINT, MID_RANGE, THREE_POINTER, or FREE_THROW.
+      3) Provide 3 concise coaching tips to improve the same type of shot next time.
+
+      DEFINITIONS (strict)
+      - MAKE: Ball passes completely through the hoop from above during the clip (counts even if there's an and-1).
+      - MISS: Any shot that does not go in (including blocked after release, airball, rim-out). If no clear attempt occurs, set "make_miss": null.
+
+      Range category is based on shooter position at RELEASE and the context of the play:
+      - LAY_UP: At/under the rim (layups, finger rolls, scoop shots, tip-ins, putbacks, dunks all count as LAY_UP).
+      - IN_PAINT: Non-layup two-point attempts with both feet inside the painted lane at release (floaters/runners/hooks/post moves inside paint).
+      - MID_RANGE: Two-point attempts outside the paint but inside the 3-pt line.
+      - THREE_POINTER: Both feet clearly behind the 3-pt arc at release. Toe on the line → MID_RANGE.
+      - FREE_THROW: Stationary, unguarded free-throw context.
+
+      TIE-BREAKS / EDGE CASES
+      - Tip-ins/putbacks: Treat as LAY_UP.
+      - Floaters/runners: Inside paint → IN_PAINT; outside paint → MID_RANGE.
+      - Blocked after release → MISS with appropriate range.
+      - If uncertain between two non–free-throw ranges, choose the closer-in one.
+
+      CONSTRAINTS
+      - Classify the first complete attempt in the clip; ignore later attempts.
+      - Output must be valid JSON only. Do not include reasoning or extra fields.
+
+      OUTPUT SCHEMA (use exactly these keys)
+      {
+        "make_miss": "MAKE | MISS | null",
+        "range": "LAY_UP | IN_PAINT | MID_RANGE | THREE_POINTER | FREE_THROW | null",
+        "confidence": 0.0,
+        "tips": ["string", "string", "string"]
+      }
+
+  simplified:
+    name: "Simplified Prompt"
+    description: "Simpler prompt focusing on core classification"
+    content: |
+      Analyze this basketball shot video and return ONLY a JSON object.
+
+      Classify:
+      1) MAKE or MISS: Did the ball go through the hoop?
+      2) Shot type: LAY_UP (at rim), IN_PAINT (inside paint), MID_RANGE (outside paint, inside 3pt line), THREE_POINTER (behind 3pt line), or FREE_THROW
+
+      JSON format:
+      {
+        "make_miss": "MAKE | MISS",
+        "range": "LAY_UP | IN_PAINT | MID_RANGE | THREE_POINTER | FREE_THROW",
+        "confidence": 0.0,
+        "tips": ["tip1", "tip2", "tip3"]
+      }
+
+  detailed_context:
+    name: "Detailed Context Prompt"
+    description: "More detailed prompt with basketball context and examples"
+    content: |
+      You are a professional basketball analyst reviewing shot attempts. Analyze this video clip and classify the shot.
+
+      SHOT OUTCOME:
+      - MAKE: Ball cleanly goes through the hoop (swish, bank shot, or off the rim and in)
+      - MISS: Ball does not go in (airball, rim out, blocked, hits backboard only)
+
+      SHOT LOCATION (based on shooter's feet at release):
+      - LAY_UP: Within 3 feet of basket (includes dunks, finger rolls, reverse layups)
+      - IN_PAINT: Inside the painted area but not a layup (floaters, hooks, short jumpers)
+      - MID_RANGE: Between paint and 3-point line (pull-ups, fadeaways, post moves)
+      - THREE_POINTER: Behind the 3-point arc (catch-and-shoot, step-backs, pull-ups)
+      - FREE_THROW: Unguarded shot from free-throw line during dead ball
+
+      COACHING TIPS: Provide 3 specific, actionable tips for improving this type of shot.
+
+      Return ONLY this JSON:
+      {
+        "make_miss": "MAKE | MISS",
+        "range": "LAY_UP | IN_PAINT | MID_RANGE | THREE_POINTER | FREE_THROW",
+        "confidence": 0.0,
+        "tips": ["specific tip 1", "specific tip 2", "specific tip 3"]
+      }
+
+  minimal:
+    name: "Minimal Prompt"
+    description: "Extremely minimal prompt to test basic understanding"
+    content: |
+      Watch this basketball shot. Return JSON:
+      
+      {
+        "make_miss": "MAKE or MISS",
+        "range": "LAY_UP, IN_PAINT, MID_RANGE, THREE_POINTER, or FREE_THROW",
+        "confidence": 0.0,
+        "tips": ["tip1", "tip2", "tip3"]
+      }

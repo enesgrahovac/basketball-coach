@@ -238,3 +238,6 @@ ios/Config.xcconfig
 build/
 dist/
 out/
+
+# AI Evaluation data (contains videos and sensitive analysis data)
+ai-evaluation/data/

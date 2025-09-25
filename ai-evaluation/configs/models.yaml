@@ -1,0 +1,43 @@
+# Model configurations for evaluation
+
+models:
+  gemini_flash:
+    name: "models/gemini-2.5-flash"
+    description: "Fast, cost-effective model for general use"
+    pricing:
+      input_per_1m_tokens: 0.075
+      output_per_1m_tokens: 0.30
+    
+  gemini_flash_lite:
+    name: "models/gemini-2.5-flash-lite"
+    description: "Ultra-fast, lightweight model"
+    pricing:
+      input_per_1m_tokens: 0.075
+      output_per_1m_tokens: 0.30
+      
+  gemini_pro:
+    name: "models/gemini-2.5-pro"
+    description: "High-quality model for complex analysis"
+    pricing:
+      input_per_1m_tokens: 3.50
+      output_per_1m_tokens: 10.50
+
+# Video processing configurations
+video_configs:
+  standard:
+    fps: 24
+    resolution: "MEDIUM"
+    
+  high_quality:
+    fps: 30
+    resolution: "HIGH"
+    
+  fast:
+    fps: 12
+    resolution: "LOW"
+
+# Evaluation settings
+evaluation:
+  max_samples_test: 10  # For quick testing
+  timeout_seconds: 60
+  retry_attempts: 3
